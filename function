@@ -1,3 +1,21 @@
+def Fire(q,maze):
+    row = len(maze)
+    col = len(maze[0])
+    fm = [[0]*row for _ in range(col)]
+    for i in range(row):
+        for j in range(col):
+            count = 0;
+            for di in dircs:
+                cur = di[i,j]
+                if cur[0] < 0 or cur[0] > row-1 or cur[1] < 0 or cur[1] > col -1:
+                    continue
+                if maze[i][j] == 3:
+                    count++
+            fm[i][j] = 1 - (1 - q)**count
+    return fm
+
+
+
 path_dfs = []
 def dfs(mz,x1,y1,x2,y2): #start at (x1,y1), end at (x2,y2)
     dirs = [
