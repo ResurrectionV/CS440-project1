@@ -15,7 +15,6 @@ def Fire(q,maze):
     return fm
 
 
-
 path_dfs = []
 def dfs(mz,x1,y1,x2,y2): #start at (x1,y1), end at (x2,y2)
     dirs = [
@@ -31,7 +30,7 @@ def dfs(mz,x1,y1,x2,y2): #start at (x1,y1), end at (x2,y2)
     
     for di in dirs:
         cur = di(x1,y1)
-        if cur[0] > len(mz) - 2 or cur[1] > len[mz] - 2 or cur[0] < 0 or cur[1] < 0:
+        if cur[0] > len(mz) - 2 or cur[1] > len(mz) - 2 or cur[0] < 0 or cur[1] < 0:
             continue
         direction = ''
         if cur[0] - x1 == 1:
