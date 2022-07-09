@@ -49,6 +49,7 @@ def dfs(mz,x1,y1,x2,y2): #start at (x1,y1), end at (x2,y2)
     return False
         
         
+
 path_bfs = []
 def bfs(mz,x1,y1,x2,y2):
     dirs = [
@@ -58,8 +59,8 @@ def bfs(mz,x1,y1,x2,y2):
         lambda x,y: ( x , y-1 )
         ]
     
-    n,m = len(maze),len(maze[0])
-    global path_dfs
+    n,m = len(mz),len(mz[0])
+    global path_bfs
     fringe = [] #stores the node that are needed to explore
     fringe.append((x1,y1))
     mz[x1][y1] = 1
@@ -82,7 +83,7 @@ def bfs(mz,x1,y1,x2,y2):
                         if node[0] == n[0] and node[1] == n[1]:
                             temp_path.append(node)
                             path_bfs.pop(count)
-                        count++
+                        count = count + 1
             path_bfs = temp_path.reverse()
             return True
         
