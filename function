@@ -27,12 +27,11 @@ def dfs(mz,x1,y1,x2,y2): #start at (x1,y1), end at (x2,y2)
     global path_dfs
     
     if x1 == x2 and y1 == y2:
-        print path_dfs
-        return path_dfs
+        return True
     
     for di in dirs:
-        cur = [di(x1,y1)]
-        if cur[0] > len(mz) - 2 or cur[1] > len[maze] - 2 or cur[0] < 0 or cur[1] < 0:
+        cur = di(x1,y1)
+        if cur[0] > len(mz) - 2 or cur[1] > len[mz] - 2 or cur[0] < 0 or cur[1] < 0:
             continue
         direction = ''
         if cur[0] - x1 == 1:
@@ -44,10 +43,11 @@ def dfs(mz,x1,y1,x2,y2): #start at (x1,y1), end at (x2,y2)
         if cur[0] - y1 == -1:
             direction = 'L' #Leftward
         mz[cur[0]][cur[1]] = 1 #maze 1 for wall and 0 for acessible
-        path_dfs += direction
+        path_dfs.append(direction)
         dfs(mz,cur[0], cur[1], x2, y2)
         path = path_dfs[:-1]
         maze[cur[0]][cur[1]] = 0
+    return False
         
         
 path_bfs = []
