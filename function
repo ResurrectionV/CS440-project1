@@ -37,6 +37,14 @@ def check(mz,x1,y1,x2,y2):
         fringe = list(fringe)
     return False
 
+def back(mz):
+    l = len(mz)
+    for i in range(l):
+        for j in range(l):
+            if mz[i][j] == 2:
+                mz[i][j] = 0
+    return mz
+
 def acessibility(mz):
     #check (unblock center and corner)center to 4 corner and upper left to bottom left(block center)
     #find the center
@@ -44,22 +52,48 @@ def acessibility(mz):
     c = (l + 1)/2 - 1
     c = int(c)
     #unblock center and corners
+    tl = mz[0][0]
+    tr = mz[0][l-1]
+    bl = mz[l-1][0]
+    br = mz[l-1][l-1]
+    mid = mz[c][c]
     mz[0][0] = 0
     mz[0][l-1] = 0
     mz[l-1][0] = 0
     mz[l-1][l-1] = 0
     mz[c][c] = 0
-    mz1 = mz
-    mz2 = mz
-    mz3 = mz
-    mz4 = mz
-    mz5 = mz
-    if not (check(mz1,c,c,0,0) and check(mz2,c,c,0,l-1) and check(mz3,c,c,l-1,0) and check(mz4,c,c,l-1,l-1)):
+    c1 = check(mz,c,c,0,0)
+    mz = back(mz)
+    c2 = check(mz,c,c,0,l-1)
+    mz = back(mz)
+    c3 = check(mz,c,c,l-1,0)
+    mz = back(mz)
+    c4 = check(mz,c,c,l-1,l-1)
+    mz = back(mz)
+    mz[c][c] = 1
+    c5 = check(mz,0,0,l-1,l-1)
+    mz = back(mz)
+    if not (c1 and c2 and c3 and c4):
+        mz[0][0] = tl 
+        mz[0][l-1] = tr
+        mz[l-1][0] = bl
+        mz[l-1][l-1] = br
+        mz[c][c] = mid
         return False
     #block the center
-    mz5[c][c] = 1
-    if not check(mz5,0,0,l-1,l-1):
+    
+    if not c5:
+        mz[0][0] = tl 
+        mz[0][l-1] = tr
+        mz[l-1][0] = bl
+        mz[l-1][l-1] = br
+        mz[c][c] = mid
         return False
+    mz[0][0] = tl 
+    mz[0][l-1] = tr
+    mz[l-1][0] = bl
+    mz[l-1][l-1] = br
+    mz[c][c] = mid
     return True
 
 #######################
