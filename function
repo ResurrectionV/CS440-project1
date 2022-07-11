@@ -1,3 +1,4 @@
+#Each time agent moves one step, we implement this function for attaining a new probability matrix that stores the probability of catching a fire for each entry.
 def Fire(q,maze):
     row = len(maze)
     col = len(maze[0])
@@ -93,3 +94,62 @@ def bfs(mz,x1,y1,x2,y2):
                 path_bfs.append(next)
                 mz[cur[0]][cur[1]] = 1
     return False
+    
+    关于check maze的可行性
+    #######################################
+def check(mz,x1,y1,x2,y2):
+    dirs = [
+        lambda x,y: ( x+1 , y ),
+        lambda x,y: ( x-1 , y ),
+        lambda x,y: ( x , y+1 ),
+        lambda x,y: ( x , y-1 )
+        ]
+    n,m = len(mz),len(mz[0])
+    global path_bfs
+    fringe = [] #stores the node that are needed to explore
+    fringe.append((x1,y1))
+    mz[x1][y1] = 2
+    
+    while len(fringe) > 0:
+        cur = fringe[0]
+        
+        if cur[0] == x2 and cur[1] == y2:
+            return True
+        
+        for di in dirs:
+            next = di(cur[0],cur[1])
+            if next[0] < 0 or next[1] < 0 or next[0] > n-1 or next[1] > m - 1:
+                continue
+            if mz[next[0]][next[1]] == 0:
+                fringe.append(next)
+                mz[next[0]][next[1]] = 2
+            
+        fringe = deque(fringe)
+        fringe.popleft()
+        fringe = list(fringe)
+    return False
+
+def acessibility(mz):
+    #check (unblock center and corner)center to 4 corner and upper left to bottom left(block center)
+    #find the center
+    l = len(mz)
+    c = (l + 1)/2 - 1
+    c = int(c)
+    #unblock center and corners
+    mz[0][0] = 0
+    mz[0][l-1] = 0
+    mz[l-1][0] = 0
+    mz[l-1][l-1] = 0
+    mz[c][c] = 0
+    mz1 = mz
+    mz2 = mz
+    mz3 = mz
+    mz4 = mz
+    mz5 = mz
+    if not (check(mz1,c,c,0,0) and check(mz2,c,c,0,l-1) and check(mz3,c,c,l-1,0) and check(mz4,c,c,l-1,l-1)):
+        return False
+    #block the center
+    mz5[c][c] = 1
+    if not check(mz5,0,0,l-1,l-1):
+        return False
+    return True
