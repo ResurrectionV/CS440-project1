@@ -173,49 +173,85 @@ def dfs(mz,x1,y1,x2,y2): #start at (x1,y1), end at (x2,y2)
     return False
         
         
-
-path_bfs = []
+###########################################
+#bfs
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+        self.parent = None
+        
+class lList:
+    def __init__(self):
+        self.head = None
+        
+        
+path_bfs = lList()
 def bfs(mz,x1,y1,x2,y2):
     dirs = [
         lambda x,y: ( x+1 , y ),
         lambda x,y: ( x-1 , y ),
         lambda x,y: ( x , y+1 ),
-        lambda x,y: ( x , y-1 )
+        lambda x,y: ( x , y-1 ) 
         ]
-    
     n,m = len(mz),len(mz[0])
     global path_bfs
     fringe = [] #stores the node that are needed to explore
     fringe.append((x1,y1))
-    mz[x1][y1] = 1
-    path_bfs.append(fringe[0])
+    mz[x1][y1] = 2
+    path_bfs.head = Node((x1,y1))
+    Ncur = path_bfs.head
     
     while len(fringe) > 0:
         cur = fringe[0]
         
         if cur[0] == x2 and cur[1] == y2:
-            temp_path = []
-            temp_path.append(path_bfs[-1])
-            temp_Node = path_bfs[-1]
-            path_bfs.pop()
-            
-            while (not temp_Node[0] == x1) and (not temp_Node[1] == y1):
-                for di in dirs:
-                    node = di(temp_Node[0],temp_Node[1])
-                    count = 0
-                    for n in path_bfs:
-                        if node[0] == n[0] and node[1] == n[1]:
-                            temp_path.append(node)
-                            path_bfs.pop(count)
-                        count = count + 1
-            path_bfs = temp_path.reverse()
             return True
         
+        
+        pa = Ncur
         for di in dirs:
-            next = di(cur[0],cur[1])
-            if mz[cur[0]][cur[1]] == 0:
-                path_bfs.append(next)
-                mz[cur[0]][cur[1]] = 1
+            ne = di(cur[0],cur[1])
+            if ne[0] < 0 or ne[1] < 0 or ne[0] > n-1 or ne[1] > m - 1:
+                continue
+            if mz[ne[0]][ne[1]] == 1:
+                continue
+            if mz[ne[0]][ne[1]] == 0:
+                fringe.append(ne)
+                mz[ne[0]][ne[1]] = 2
+                Ncur.next = Node((ne[0],ne[1]))
+                Ncur = Ncur.next
+                Ncur.parent = pa
+            
+        fringe = deque(fringe)
+        fringe.popleft()
+        fringe = list(fringe)
     return False
+
+
+#bfs test
+A = [[0, 0, 0],
+     [1, 0, 0],
+     [0, 0, 0]]
+res = bfs(A,0,0,2,2)
+use = path_bfs.head
+print(A)
+while not use.data == (2,2):
+    print(use.data)
+    use = use.next
+
+
+print()
+print(use.data)
+print(use.parent.data)
+use = use.parent
+print(use.parent.data)
+use = use.parent
+print(use.parent.data)
+use = use.parent
+print(use.parent.data)
+
+
+
     
    
