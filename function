@@ -143,35 +143,7 @@ def Fire(q,maze):
     return fm
 
 
-path_dfs = []
-def dfs(mz,x1,y1,x2,y2): #start at (x1,y1), end at (x2,y2)
-    dirs = [
-        lambda x,y: ( x+1 , y ),
-        lambda x,y: ( x-1 , y ),
-        lambda x,y: ( x , y+1 ),
-        lambda x,y: ( x , y-1 )
-        ]
-    global path_dfs
-    l = len(mz)
-    
-    fringe = [(x1,x2)]
-    path_dfs.append(fringe[0])
-    while not fringe == []:
-        cur = fringe[-1]
-        fringe.pop
-        if cur == (x2,y2):
-            return True
-        for di in dirs:
-            next = di(cur[0],cur[1])
-            if -1<next[0]<l and -1<next[1]<l:
-                if mz[next[0]][next[1]] == 0:
-                    fringe.append(next)
-                    mz[next[0]][next[1]] == 1
-                continue
-            else:
-                continue     
-    return False
-        
+
         
 ###########################################
 #bfs
@@ -250,6 +222,70 @@ use = use.parent
 print(use.parent.data)
 use = use.parent
 print(use.parent.data)
+
+##################################
+#dfs
+path_dfs = lList()
+def dfs(mz,x1,y1,x2,y2): #start at (x1,y1), end at (x2,y2)
+    dirs = [
+        lambda x,y: ( x+1 , y ),
+        lambda x,y: ( x-1 , y ),
+        lambda x,y: ( x , y+1 ),
+        lambda x,y: ( x , y-1 )
+        ]
+    
+    global path_dfs
+    l = len(mz)
+    
+    fringe = [(x1,y1)]
+    mz[x1][y1] = 2
+    path_dfs.head = Node((x1,y1))
+    N = path_dfs.head
+    
+    while not fringe == []:
+        cur = fringe.pop()
+        if cur == (x2,y2):
+            return True
+        
+        pa = N
+        for di in dirs:
+            ne = di(cur[0],cur[1])
+            if ne[0] < 0 or ne[1] < 0 or ne[0] > l-1 or ne[1] > l - 1:
+                continue
+            if mz[ne[0]][ne[1]] == 1:
+                continue
+            if mz[ne[0]][ne[1]] == 0:
+                fringe.append(ne)
+                mz[ne[0]][ne[1]] = 2
+                N.next = Node((ne[0],ne[1]))
+                N = N.next
+                N.parent = pa
+        
+    return False
+
+
+#dfs test
+A = [[0, 0, 0],
+     [1, 0, 0],
+     [0, 0, 0]]
+res = dfs(A,0,0,2,2)
+use = path_dfs.head
+print(A)
+while not use.next == None:
+    print(use.data)
+    use = use.next
+
+print()
+print(use.data)
+use = use.parent
+print(use.data)
+use = use.parent
+print(use.data)
+use = use.parent
+print(use.data)
+use = use.parent
+print(use.data)
+
 
 
 
