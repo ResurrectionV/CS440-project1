@@ -127,20 +127,34 @@ def mazePrint(mz):
 
 #Each time agent moves one step, we implement this function for attaining a new probability matrix that stores the probability of catching a fire for each entry.
 def Fire(q,maze):
+    dirs = [
+        lambda x,y: ( x+1 , y ),
+        lambda x,y: ( x-1 , y ),
+        lambda x,y: ( x , y+1 ),
+        lambda x,y: ( x , y-1 )
+        ]
     row = len(maze)
     col = len(maze[0])
     fm = [[0]*row for _ in range(col)]
     for i in range(row):
         for j in range(col):
+            if maze[i][j] == 1 or maze[i][j] == 3:
+                continue
             count = 0;
-            for di in dircs:
-                cur = di[i,j]
+            for di in dirs:
+                cur = di(i,j)
                 if cur[0] < 0 or cur[0] > row-1 or cur[1] < 0 or cur[1] > col -1:
                     continue
-                if maze[i][j] == 3:
-                    count++
-            fm[i][j] = 1 - (1 - q)**count
+                if maze[cur[0]][cur[1]] == 3:
+                    count = count + 1
+            fm[i][j] = round(1 - (1 - q)**count, 2)
     return fm
+
+
+A = [[0, 0, 0],
+     [1, 0, 3],
+     [0, 3, 0]]
+print(Fire(0.2,A))
 
 
 
