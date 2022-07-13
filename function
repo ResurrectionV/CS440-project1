@@ -285,7 +285,7 @@ def dfs(mz,x1,y1,x2,y2): #start at (x1,y1), end at (x2,y2)
                 mz[ne[0]][ne[1]] = 2
                 N.next = Node((ne[0],ne[1]))
                 N = N.next
-                pa = find_Node(path_bfs.head, cur)
+                pa = find_Node(path_dfs.head, cur)
                 N.parent = pa
         
     return False
@@ -376,7 +376,7 @@ def As(mz,x1,y1,x2,y2):
                 mz[ne[0]][ne[1]] = 2
                 Ncur.next = Node((ne[0],ne[1]))
                 Ncur = Ncur.next
-                pa = find_Node(path_bfs.head, (cur[0],cur[1]))
+                pa = find_Node(path_A.head, (cur[0],cur[1]))
                 Ncur.parent = pa
     return False
             
