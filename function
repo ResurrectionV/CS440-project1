@@ -380,14 +380,9 @@ while not use.data == (2,2):
     use = use.next
     
 print()
+while not use.parent == None:
+    print(use.data)
+    use = use.parent
 print(use.data)
-print(use.parent.data)
-use = use.parent
-print(use.parent.data)
-use = use.parent
-print(use.parent.data)
-use = use.parent
-print(use.parent.data)
-
     
    
