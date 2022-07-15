@@ -449,6 +449,9 @@ def path_store(ll, x,y):
     path_ret = []
     while not temp.data == (x,y):
         temp = temp.next
+        if temp == None:
+            print("No Valid Path!!!")
+            sys.exit(0)
     while not temp.parent == None:
         path_ret.append(temp.data)
         temp = temp.parent
@@ -543,10 +546,14 @@ def agent3(mz, path, t1, t2, pq):
     if pl >= 3:
         pl = 3
     count = 0
+    path = deque(path)
+    k = path.popleft()
+    path = list(path)
+    true_path.append(k)
     for time in range(pl):
         count = count + 1
         print("Predicting after the " + str(count) + " step(s):")
-        cur = path[1]
+        cur = path[0]
         mz = Fire(pq, mz)
         path = deque(path)
         k = path.popleft()
@@ -643,22 +650,23 @@ def main(mz, s1, s2, t1, t2):
 
 
 
-A = generatemaze(5)
+A = generatemaze(51)
 A[0][0] = 0
-A[4][4] = 0
-A[2][2] = 3
+A[50][50] = 0
+A[25][25] = 3
 mazePrint(A)
-bfs(A,0,0,4,4)
+bfs(A,0,0,50,50)
 if bfs == False:
     print("No valid path")
     sys.exit(0)
-real_path = path_store(path_bfs,4,4)
+temp = path_bfs.head
+while not temp == None:
+    print(temp.data)
+    temp = temp.next
+real_path = path_store(path_bfs,50,50)
 print(real_path)
 
-real_path = agent3(A,real_path,4,4,0.25)
+real_path = agent3(A,real_path,50,50,0.25)
 print(real_path)
-
-
-
 
 
