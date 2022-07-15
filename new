@@ -492,6 +492,9 @@ def path_store(ll, x,y):
     
 
 def agent2(mz, path, s1, s2, t1, t2):
+    #1. 检查已给路径中是否有着火的点， 如果没有则返回原始路径， 如无 重新规划路径
+    #2. 记录bfs dfs A* 的路线（从起始点到终点 在考虑火焰的情况下）， 对比长度 取最短路径
+    
     #readjust path based on current situation
     #check the whether the fire position is in the path
     count = 0
@@ -531,10 +534,9 @@ def agent2(mz, path, s1, s2, t1, t2):
     
             
 
-def agent3(mz, path, s1, s2, t1, t2, pq):
+def agent3(mz, path, t1, t2, pq):
+    #使用相同的着火概率模型每走一步 更新下一步走完后 迷宫可能的样子 然后使用agent2 重新规划路径
     #Simulating future in 3 steps
-    cur = path[0]
-    mz[cur[0]][cur[1]] = 1
     pl = len(path)
     true_path = []
     if pl >= 3:
@@ -549,7 +551,6 @@ def agent3(mz, path, s1, s2, t1, t2, pq):
         k = path.popleft()
         path = list(path)
         path = agent2(mz,path,cur[0],cur[1],t1,t2)
-        mz[cur[0]][cur[1]] = 1
         mazePrint(mz)
         if path == [(-1,-1)]:
             return path
@@ -561,8 +562,59 @@ def agent3(mz, path, s1, s2, t1, t2, pq):
     path.reverse()
     return path
 
-def agent4(mz):
-    pass
+
+
+
+
+def Fire2(pb, maze):
+    dirs = [
+        lambda x, y: (x + 1, y),
+        lambda x, y: (x - 1, y),
+        lambda x, y: (x, y + 1),
+        lambda x, y: (x, y - 1)
+    ]
+    row = len(maze)
+    col = len(maze[0])
+    fm = [[0] * row for _ in range(col)]
+    for i in range(row):
+        for j in range(col):
+            if maze[i][j] == 3:
+                for di in dirs:
+                    cur = di(i, j)
+                    if cur[0] < 0 or cur[0] > row - 1 or cur[1] < 0 or cur[1] > col - 1:
+                        continue
+                    if maze[cur[0]][cur[1]] == 0:
+                        fm[cur[0]][cur[1]] = pb
+            
+    for i in range(row):
+        for j in range(col):
+            if isinstance(fm[i][j], float):
+                if random.uniform(0,1) < fm[i][j]:
+                    maze[i][j] = 3
+    return maze
+
+
+
+
+def agent4(mz, path, t1, t2, pb):
+    true_path = []
+    cur = path[1]
+    mz = Fire2(pb, mz)
+    path = deque(path)
+    k = path.popleft()
+    path = list(path)
+    path = agent2(mz,path,cur[0],cur[1],t1,t2)
+    mazePrint(mz)
+    if path == [(-1,-1)]:
+        return path
+    true_path.append(k)
+    
+    true_path.reverse()
+    path.reverse()
+    for i in range(len(true_path)):
+        path.append(true_path[i])
+    path.reverse()
+    return path
 
 
 
@@ -584,10 +636,8 @@ A = [[0, 0, 0, 0, 0],
      [0, 0, 3, 0, 0],
      [0, 0, 0, 0, 0],
      [0, 0, 0, 0, 0]]
-real_path = agent3(A,real_path,0,1,4,4,0.3)
+real_path = agent4(A,real_path,4,4,0.75)
 print(real_path)
-
-
 
 
 
