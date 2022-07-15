@@ -1,7 +1,9 @@
+
 # import
 from collections import deque
 import random
 import math
+import sys
 dirs=[(0,1),(1,0),(0,-1),(-1,0)]
 ########################
 # 关于check maze的可行性
@@ -437,21 +439,31 @@ while not use.parent == None:
 print(use.data)
 print()
 '''
+def path_store(ll, x,y):
+    if ll.head == None:
+        print("No Valid Path!")
+        sys.exit(0)
+    # ll is the head of the linked list
+    # x y are the position of the target
+    temp = ll.head
+    path_ret = []
+    while not temp.data == (x,y):
+        temp = temp.next
+    while not temp.parent == None:
+        path_ret.append(temp.data)
+        temp = temp.parent
+    path_ret.append(temp.data)
+    path_ret.reverse()
+    return path_ret
 
-def agent(maze):
-    As(maze,0,0,len(maze)-1,len(maze[0])-1)
-    use = path_A.head
-    res = [(len(maze)-1, len(maze[0])-1)]
-    while not use.data == ((len(maze)-1, len(maze[0])-1)):
-        #print(use.data)
-        use = use.next
 
 
-    while not use.parent == None:
-        use = use.parent
-        #print(use.data)
-        res.append(use.data)
-    return res
+
+
+def agent1(maze,s1,s2,t1,t2):
+    bfs(maze, s1, s2, t1, t2)
+    real_path = path_store(path_bfs, t1, t2)
+    return real_path
 
 
 
@@ -476,19 +488,7 @@ def walkfire(maze):
     return small
 
 
-def path_store(ll, x,y):
-    # ll is the head of the linked list
-    # x y are the position of the target
-    temp = ll.head
-    path_ret = []
-    while not temp.data == (x,y):
-        temp = temp.next
-    while not temp.parent == None:
-        path_ret.append(temp.data)
-        temp = temp.parent
-    path_ret.append(temp.data)
-    path_ret.reverse()
-    return path_ret
+
     
 
 def agent2(mz, path, s1, s2, t1, t2):
@@ -508,7 +508,8 @@ def agent2(mz, path, s1, s2, t1, t2):
     res2 = dfs(mz, s1, s2, t1, t2)
     res3 = As(mz, s1, s2, t1, t2)
     if (not res1) or (not res2) or (not res3):
-        return [(-1,-1)]
+        print("No Valid Path!!")
+        sys.exit(0)
     l1 = path_bfs
     l2 = path_dfs
     l3 = path_A
@@ -550,10 +551,10 @@ def agent3(mz, path, t1, t2, pq):
         path = deque(path)
         k = path.popleft()
         path = list(path)
-        path = agent2(mz,path,cur[0],cur[1],t1,t2)
         mazePrint(mz)
-        if path == [(-1,-1)]:
-            return path
+        print("Agent is currently standing at the position: ")
+        print(cur)
+        path = agent2(mz,path,cur[0],cur[1],t1,t2)
         true_path.append(k)
     true_path.reverse()
     path.reverse()
@@ -621,26 +622,41 @@ def agent4(mz, path, t1, t2, pb):
 
 
 
-A = [[0, 0, 0, 0, 0],
-     [1, 0, 0, 0, 0],
-     [0, 0, 0, 0, 0],
-     [0, 0, 0, 0, 0],
-     [0, 0, 0, 0, 0]]
+
+
+
+def main(mz, s1, s2, t1, t2):
+    pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+A = generatemaze(5)
+A[0][0] = 0
+A[4][4] = 0
+A[2][2] = 3
+mazePrint(A)
 bfs(A,0,0,4,4)
+if bfs == False:
+    print("No valid path")
+    sys.exit(0)
 real_path = path_store(path_bfs,4,4)
 print(real_path)
-mazePrint(A)
 
-A = [[0, 0, 0, 0, 0],
-     [1, 0, 0, 0, 0],
-     [0, 0, 3, 0, 0],
-     [0, 0, 0, 0, 0],
-     [0, 0, 0, 0, 0]]
-real_path = agent4(A,real_path,4,4,0.75)
+real_path = agent3(A,real_path,4,4,0.25)
 print(real_path)
-
-
-
 
 
 
